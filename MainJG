@@ -1,0 +1,478 @@
+#pragma strict
+import SimpleJSON;
+import Herramienta ;
+var jsonEntrada: String='{"CASING":[{"numPieza":1,"revestimiento":"CASING","od":5454,"id":63583,"api":6565,"grado":56,"peso":5656,"tope":546,"baseMD":5465}],"HERRAMIENTAS":[{"numPieza":1,"herramienta":"TUBING","od":545456,"id":6899,"longitud":5646,"baseMD":56546465},{"numPieza":1,"herramienta":"CAMISA","od":6546,"id":654654,"longitud":6546546546,"baseMD":456546},{"numPieza":1,"herramienta":"TUBING","od":6546456546,"id":546456546,"longitud":6456564,"baseMD":654654},{"numPieza":1,"herramienta":"NOGO","od":6546,"id":456456,"longitud":645456,"baseMD":6546456456},{"numPieza":1,"herramienta":"TUBING","od":"","id":"","longitud":"","baseMD":""},{"numPieza":1,"herramienta":"XOVER","od":546456,"id":654,"longitud":354,"baseMD":5468},{"numPieza":1,"herramienta":"PACKERRTV","od":8847,"id":6468,"longitud":8788,"baseMD":456456},{"numPieza":1,"herramienta":"TUBING","od":54456,"id":4568,"longitud":6546,"baseMD":45654}]}';
+////////////////////////////VARIABLES AUXILIARES PARA LA CONSTRUCCION DE LA COMPLETACION//////////////////
+var herramientas :String[]=["TUBING","HANGER","CROSS","OVER","CROSS OVER 2","TUBING","SLIDING SLEEVE","TUBING","SEATING NIPPLE","TUBING","SENSOR CARRIER","TUBING","CROSS OVER","PACKER HIDRÁULICO","TUBING","SEATING NIPPLE","TUBING","MULE SHOE"];
+var arrayHerramientas: Herramienta[];
+var arrayCasing : GameObject[];
+var arrayCompletacion :ArrayList;
+var base: String="";
+var md: String="";
+var tvd: String="";
+var diametro: String="";
+var od: String="";
+var id: String="";
+var hand : GameObject;
+////////////////////////////PIEZAS DE LA COMPLETACION///////////////////////////////////
+var casing : GameObject ;
+var BARCARCHER : GameObject ;
+var BELLNIPPLE : GameObject ;
+var BULLPLUG : GameObject ;
+var CAMISA : GameObject ;
+var CARRIERTCP : GameObject ;
+var CARRIERRTM : GameObject ;
+var MAGNELTOOL : GameObject ;
+var MULESHOE : GameObject ;
+var NOGO : GameObject ;
+var ONOFFCONNECTOR : GameObject ;
+var PACKER : GameObject ;
+var PUPJOINT : GameObject ;
+var SAFETYJOINT : GameObject ;
+var TUBING : GameObject ;
+var TUBINGHANGER : GameObject ;
+var WESTREST : GameObject ;
+var XOVER27 : GameObject ;
+var XOVER31 : GameObject ;
+/////////////////////////INICIALZACION EN X,Y,Z//////////////////////////////////////////
+var numeroPiezas: int=0;
+var  indicadorDistancia=0;
+var rangoSaltoCasing: float= 3.81;
+var inicioCasingX: double =-100;
+var inicioCasingY: float =25000;
+var unicioCasingZ: double =500;
+var scrollPosition : Vector2 = Vector2.zero;
+var customSkin : GUISkin;
+var coordenadaZ:float=500;
+var coordenaday:float=25000;
+var coordenadax:float=-100.0155;
+///////////////////////ESTABLECER LONGITUDES DE PIEZAS PARA LA COMPLETACION//////////////////////////////////////////////////////////
+var longBarCarcher: float =0.22;
+var longBellNipple: float =0.22;
+var longBullPlug: float =0.05;
+var longCamisa: float =0.36;
+var longCarrierTCP: float =1.4;
+var longCarrierRTM: float =0.46;
+var longMagnelTool: float =0.65;
+var longMuleShoe: float =0.1;
+var longNoGo: float =0.13;
+var longOnOfConnector: float =0.16;
+var longPackerHidraulico: float =0.6;
+var longPupJoint: float =0.59;
+var longSafetyJoint1: float =0.12;
+var longTubing: float =3.76;
+var longTubingHanger: float =25000;
+var longWestRest: float =0.7;
+var longXover27: float =0;
+var longXover31: float =0.16;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var target : Transform;
+var distance = 30.0;
+ 
+var xSpeed = 100.0;
+var ySpeed = 100.0;
+ 
+var yMinLimit = 2;
+var yMaxLimit = 80;
+ 
+var distanceMin = 3;
+var distanceMax = 25;
+ 
+private var x = 0.0; 
+private var y = 0.0;
+/////////////////////////////////////////////////////////////
+function Start () {   
+//graficaCompletacion('{"HERRAMIENTAS":[{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1541,"codigo":124,"descripcion":"Tubing I","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing I","aux1":"NA","aux2":"12","aux3":"TUBING-1(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"17"},"topeMD":0,"baseMD":8294.65,"longitud":8294.65,"topeTVD":0,"baseTVD":7774.603475,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000320R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id":1948,"codigo":127,"descripcion":"","entero":null,"rate":null,"fecha":null,"blob":null,"texto":"Anular/Tubing","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":null,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"1"},"rugosidadInterna":"0.00075","rugosidadExterna":"0.00075","descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":true,"herramienta":{"id":1538,"codigo":124,"descripcion":"Sliding sleeve","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Sliding sleeve","aux1":"CAMISA","aux2":"54","aux3":"SLIDING-SLEEVE(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"14"},"topeMD":8294.65,"baseMD":8297.77,"longitud":3.1200000000008004,"topeTVD":7774.603475,"baseTVD":7776.199355000001,"id2":{"descripcion":"2.81","id_item":"2.81","aux3":"2.81"},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id":1948,"codigo":127,"descripcion":"","entero":null,"rate":null,"fecha":null,"blob":null,"texto":"Anular/Tubing","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":null,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"1"},"rugosidadInterna":"0.00075","rugosidadExterna":"0.00075","descripcion":"Slinding Sleeve 3/12"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8297.77,"baseMD":8339.59,"longitud":41.81999999999971,"topeTVD":7776.199355000001,"baseTVD":7796.30361,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000455R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1536,"codigo":124,"descripcion":"Seating nipple","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Seating nipple","aux1":"NA","aux2":"47","aux3":"NO-GO(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"12"},"topeMD":8339.59,"baseMD":8340.710000000001,"longitud":1.1200000000008004,"topeTVD":7796.30361,"baseTVD":7796.840090000001,"id2":{"id":1801,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.750000","fecha":null,"blob":null,"texto":"L-80","aux1":"3.5","aux2":"12.7","aux3":"2.75","longtext":null,"lang":200,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"32","___id":"T000362R000218","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"3 1/2 Seating Nipple"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8340.710000000001,"baseMD":8905.86,"longitud":565.1499999999996,"topeTVD":7796.840090000001,"baseTVD":8019.319676,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000385R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":true,"profBomba":false,"herramienta":{"id":1537,"codigo":124,"descripcion":"Sensor carrier","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Sensor carrier","aux1":"CARRIERRTM","aux2":"53","aux3":"SENSOR-CARRIER(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"13"},"topeMD":8905.86,"baseMD":8910.970000000001,"longitud":5.110000000000582,"topeTVD":7774.603475,"baseTVD":8021.141902,"id2":{"descripcion":"2.992","id_item":"2.992","aux3":"2.992"},"od":{"rate":"5.99","id_item":"5.99"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Sensor Carrier"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8910.970000000001,"baseMD":8944.990000000002,"longitud":34.02000000000044,"topeTVD":8021.141902,"baseTVD":8033.273434000001,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000402R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1544,"codigo":124,"descripcion":"Hydraulic Packer","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Hydraulic Packer","aux1":"PACKER","aux2":"68","aux3":"RETRIEVABLE-PACKER-HIDRAULIC-(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"20"},"topeMD":8944.990000000002,"baseMD":8951.750000000002,"longitud":6.760000000000218,"topeTVD":8033.273434000001,"baseTVD":8035.684050000001,"id2":{"descripcion":"2.992","id_item":"2.992","aux3":"2.992"},"od":{"rate":"6.273","id_item":"6.273"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Packer hidraulico"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1527,"codigo":124,"descripcion":"Cross over","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Cross over","aux1":"XOVER31","aux2":"62","aux3":"CROSS-OVER.png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3"},"topeMD":8951.750000000002,"baseMD":8952.570000000002,"longitud":0.819999999999709,"topeTVD":8035.684050000001,"baseTVD":8035.9764620000005,"id2":{"descripcion":"2.441","id_item":"2.441","aux3":"2.441"},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"X over"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8952.570000000002,"baseMD":8987.180000000002,"longitud":34.61000000000058,"topeTVD":8035.9764620000005,"baseTVD":8048.318388000001,"id2":{"descripcion":"2.441","id_item":"2.441","aux3":"2.441"},"od":{"rate":"2.88","id_item":"2.88"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 2 7/8"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8987.180000000002,"baseMD":8988.130000000003,"longitud":0.9500000000007276,"topeTVD":8048.318388000001,"baseTVD":8048.657158000001,"id2":{"descripcion":"2.25","id_item":"2.25","aux3":"2.25"},"od":{"rate":"3.668","id_item":"3.668"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"NO-GO"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1530,"codigo":124,"descripcion":"Mule shoe","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Mule shoe","aux1":"MULESHOE","aux2":"46","aux3":"MULE-SHOE(1).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"6"},"topeMD":8988.130000000003,"baseMD":8989.130000000003,"longitud":1,"topeTVD":8048.657158000001,"baseTVD":8049.013758000001,"id2":{"descripcion":"2.441","id_item":"2.441","aux3":"2.441"},"od":{"rate":"2.88","id_item":"2.88"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Mule Shoe"}],"CONFIGURACIONES":{"numHerramientas":12}}')graficaCompletacion('{"HERRAMIENTAS":[{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1541,"codigo":124,"descripcion":"Tubing I","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing I","aux1":"NA","aux2":"12","aux3":"TUBING-1(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"17"},"topeMD":0,"baseMD":8294.65,"longitud":8294.65,"topeTVD":0,"baseTVD":7774.603475,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000320R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id":1948,"codigo":127,"descripcion":"","entero":null,"rate":null,"fecha":null,"blob":null,"texto":"Anular/Tubing","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":null,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"1"},"rugosidadInterna":"0.00075","rugosidadExterna":"0.00075","descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":true,"herramienta":{"id":1538,"codigo":124,"descripcion":"Sliding sleeve","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Sliding sleeve","aux1":"CAMISA","aux2":"54","aux3":"SLIDING-SLEEVE(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"14"},"topeMD":8294.65,"baseMD":8297.77,"longitud":3.1200000000008004,"topeTVD":7774.603475,"baseTVD":7776.199355000001,"id2":{"descripcion":"2.81","id_item":"2.81","aux3":"2.81"},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id":1948,"codigo":127,"descripcion":"","entero":null,"rate":null,"fecha":null,"blob":null,"texto":"Anular/Tubing","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":null,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"1"},"rugosidadInterna":"0.00075","rugosidadExterna":"0.00075","descripcion":"Slinding Sleeve 3/12"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8297.77,"baseMD":8339.59,"longitud":41.81999999999971,"topeTVD":7776.199355000001,"baseTVD":7796.30361,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000455R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1536,"codigo":124,"descripcion":"Seating nipple","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Seating nipple","aux1":"NA","aux2":"47","aux3":"NO-GO(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"12"},"topeMD":8339.59,"baseMD":8340.710000000001,"longitud":1.1200000000008004,"topeTVD":7796.30361,"baseTVD":7796.840090000001,"id2":{"id":1801,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.750000","fecha":null,"blob":null,"texto":"L-80","aux1":"3.5","aux2":"12.7","aux3":"2.75","longtext":null,"lang":200,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"32","___id":"T000362R000218","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"3 1/2 Seating Nipple"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8340.710000000001,"baseMD":8905.86,"longitud":565.1499999999996,"topeTVD":7796.840090000001,"baseTVD":8019.319676,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000385R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":true,"profBomba":false,"herramienta":{"id":1537,"codigo":124,"descripcion":"Sensor carrier","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Sensor carrier","aux1":"CARRIERRTM","aux2":"53","aux3":"SENSOR-CARRIER(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"13"},"topeMD":8905.86,"baseMD":8910.970000000001,"longitud":5.110000000000582,"topeTVD":7774.603475,"baseTVD":8021.141902,"id2":{"descripcion":"2.992","id_item":"2.992","aux3":"2.992"},"od":{"rate":"5.99","id_item":"5.99"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Sensor Carrier"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1542,"codigo":124,"descripcion":"Tubing II","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Tubing II","aux1":"NA","aux2":"13","aux3":"TUBING-2(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"18"},"topeMD":8910.970000000001,"baseMD":8944.990000000002,"longitud":34.02000000000044,"topeTVD":8021.141902,"baseTVD":8033.273434000001,"id2":{"id":1780,"codigo":126,"descripcion":"3.5","entero":null,"rate":"2.992000","fecha":null,"blob":null,"texto":"H-40","aux1":"3.5","aux2":"9.2","aux3":"2.992","longtext":null,"lang":179,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"11","___id":"T000402R000197","___s":true},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Tubing 3 1/2"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1544,"codigo":124,"descripcion":"Hydraulic Packer","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Hydraulic Packer","aux1":"PACKER","aux2":"68","aux3":"RETRIEVABLE-PACKER-HIDRAULIC-(2).png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"20"},"topeMD":8944.990000000002,"baseMD":8951.750000000002,"longitud":6.760000000000218,"topeTVD":8033.273434000001,"baseTVD":8035.684050000001,"id2":{"descripcion":"2.992","id_item":"2.992","aux3":"2.992"},"od":{"rate":"6.273","id_item":"6.273"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"Packer hidraulico"},{"id":"","rowNumber":null,"profSensor":false,"profBomba":false,"herramienta":{"id":1527,"codigo":124,"descripcion":"Cross over","entero":null,"rate":"0.000000","fecha":null,"blob":null,"texto":"Cross over","aux1":"XOVER31","aux2":"62","aux3":"CROSS-OVER.png","longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3"},"topeMD":8951.750000000002,"baseMD":8952.570000000002,"longitud":0.819999999999709,"topeTVD":8035.684050000001,"baseTVD":8035.9764620000005,"id2":{"descripcion":"2.441","id_item":"2.441","aux3":"2.441"},"od":{"id":1552,"codigo":125,"descripcion":"3.5","entero":null,"rate":"3.500000","fecha":null,"blob":null,"texto":"3.5","aux1":null,"aux2":null,"aux3":null,"longtext":null,"lang":0,"created_at":"0000-00-00 00:00:00","updated_at":"0000-00-00 00:00:00","id_item":"3.5"},"flujo":{"id_item":0,"texto":"Tubing"},"rugosidadInterna":"0.00075","rugosidadExterna":null,"descripcion":"X over"}],"CONFIGURACIONES":{"numHerramientas":9}}');
+} 
+ 
+function Update () {
+//CAMISA.transform.Rotate (0,50*Time.deltaTime,0);
+ 
+
+}
+
+
+ 
+function OnGUI () {
+GUI.skin = customSkin;
+
+var win1=GUI.Window(1, Rect(0,0,(Screen.width/7)*2,Screen.height), WindowFunctionHome, " Herramientas");
+var win2=GUI.Window(2, Rect((Screen.width)-300,0,300,Screen.height/4),Informacion, " Informacion Herramienta");
+//var slider = GUI.VerticalSlider (Rect((Screen.width)-300,0,500,Screen.height/4),coordenaday , 10.0, 0.0);
+/*if(GUI.Button(new Rect(800, 500,(Screen.width/4), 50),"ddwefwef"))
+
+{
+creaCasings(25000);
+arrayHerramientas=datosEntrada('{"CASING":[{"numPieza":1,"revestimiento":"CASING","od":5454,"id":63583,"api":6565,"grado":56,"peso":5656,"tope":546,"baseMD":5465}],"HERRAMIENTAS":[{"numPieza":1,"herramienta":"CAMISA","od":545456,"id":6899,"longitud":5646,"baseMD":56546465},{"numPieza":1,"herramienta":"CAMISA","od":6546,"id":654654,"longitud":6546546546,"baseMD":456546},{"numPieza":1,"herramienta":"XOVER31","od":6546456546,"id":546456546,"longitud":6456564,"baseMD":654654},{"numPieza":1,"herramienta":"PACKER","od":6546,"id":456456,"longitud":645456,"baseMD":6546456456},{"numPieza":1,"herramienta":"TUBING","od":556568,"id":565656,"longitud":15646,"baseMD":565987897},{"numPieza":1,"herramienta":"XOVER","od":546456,"id":654,"longitud":354,"baseMD":5468},{"numPieza":1,"herramienta":"PACKERRTV","od":8847,"id":6468,"longitud":8788,"baseMD":456456},{"numPieza":1,"herramienta":"TUBING","od":54456,"id":4568,"longitud":6546,"baseMD":45654}]}');
+construitCompletacion();
+}
+if(GUI.Button(new Rect(800, 600,(Screen.width/4), 50),"fdvdfg"))
+{
+destruirCompletacion();
+arrayHerramientas=datosEntrada('{"CASING":[{"numPieza":1,"revestimiento":"CASING","od":5454,"id":63583,"api":6565,"grado":56,"peso":5656,"tope":546,"baseMD":5465}],"HERRAMIENTAS":[{"numPieza":1,"herramienta":"PACKER","od":545456,"id":6899,"longitud":5646,"baseMD":56546465},{"numPieza":1,"herramienta":"CAMISA","od":6546,"id":654654,"longitud":6546546546,"baseMD":456546},{"numPieza":1,"herramienta":"XOVER31","od":6546456546,"id":546456546,"longitud":6456564,"baseMD":654654},{"numPieza":1,"herramienta":"PACKER","od":6546,"id":456456,"longitud":645456,"baseMD":6546456456},{"numPieza":1,"herramienta":"TUBING","od":556568,"id":565656,"longitud":15646,"baseMD":565987897},{"numPieza":1,"herramienta":"XOVER","od":546456,"id":654,"longitud":354,"baseMD":5468},{"numPieza":1,"herramienta":"PACKERRTV","od":8847,"id":6468,"longitud":8788,"baseMD":456456},{"numPieza":1,"herramienta":"TUBING","od":54456,"id":4568,"longitud":6546,"baseMD":45654}]}');
+construitCompletacion();
+}*/
+}
+
+/////////////////////////////////////////////FUNCION QUE CREA LOS CASINGS DE ACUERDO A LA PROFUNDIDAD DADA/////////////////////////////////
+function creaCasings(profundidad :double){
+	var totalCasings: double =profundidad/32;
+	var casingArray = [];
+	 for (var i = 0; i < totalCasings; i++) {
+	
+	Instantiate(casing, Vector3(inicioCasingX,inicioCasingY,unicioCasingZ), Quaternion.Euler(270, 0, 0)); 
+    inicioCasingY =inicioCasingY-3.81;
+	}
+}
+
+//////////////////////////////////////////////FUNCION QUE MANEJA TODA LA INTERACCION DE BOTONES DICAMICOS DE LA COMPLETACION////////////
+
+function WindowFunctionHome (windowID : int) {
+
+var Y=0;
+if(arrayHerramientas.length >=10)
+{
+
+	/*scrollPosition = GUI.BeginScrollView (Rect (20,20,(Screen.width/4),Screen.height-40),
+	scrollPosition, Rect (20, 0, 220, Screen.height*3));*/
+    scrollPosition = GUI.BeginScrollView (Rect (20,20,(Screen.width/4),Screen.height-40),
+	scrollPosition, Rect (20, 0, 0, Screen.height+100));
+	
+for(var i = 0; i <arrayHerramientas.length; i++)
+	{
+	if(arrayHerramientas[i].herramienta!='NA') 
+	{
+	if(GUI.Button(new Rect(3, Y,(Screen.width/4), 50),arrayHerramientas[i].herramienta2))
+	{
+			colorOriginal();
+		base="";
+		md=""+arrayHerramientas[i].baseMD;
+		tvd=""+arrayHerramientas[i].baseTVD;
+		diametro="";
+		od=""+arrayHerramientas[i].od; 
+		id=""+arrayHerramientas[i].id;  
+		Camera.mainCamera.transform.position =Vector3(-100.0107,arrayHerramientas[i].ubicacion ,498.7601);
+	    //hand = GameObject.Find(arrayHerramientas[i].herramienta);
+		//hand.renderer.material.color = Color(0.777, 08, 0.604);	
+			hand = arrayCompletacion[i];
+		//hand.GetComponentInChildren(Renderer).material.color=Color(0.777, 08, 0.604);
+		//hand.renderer.material.color = Color(0.777, 08, 0.604);	
+		
+		var arrrender2 : Component[];
+	arrrender2 = hand.GetComponentsInChildren (Renderer);
+	
+	var color1 : Color = Color(0.075, 0.412, 0.161, 0.784);
+	for (var joint : Renderer in arrrender2) {	
+	joint.material.color=Color(0, 0, 1, 1); 
+	/*if(joint.material.color != Color(0, 0, 1, 1)){	
+		joint.material.color=Color(0, 0, 1, 1); 
+		}		 
+		else{
+		joint.material.color=color;
+		}*/
+	}
+	
+	/*for(var w=0; w<arrrender.Length ;w++)
+	{
+		if(arrrender[w].GetComponentInChildren(Renderer).material.color!=null)
+		{
+	
+	  if(arrrender[w].GetComponentInChildren(Renderer).material.color != color )
+	  {
+	     arrrender[w].GetComponentInChildren(Renderer).material.color== Color(0.777, 08, 0.604);
+	  }
+	  }
+	}*/
+		  
+ 	
+	}
+	
+	Y+=50;
+	}
+
+
+	}
+	GUI.EndScrollView ();
+	
+}
+else{		
+	
+	Y=20;
+	for(var y = 0; y <arrayHerramientas.length; y++)
+	{
+	if(arrayHerramientas[y].herramienta!='NA') 
+	{
+	if(GUI.Button(new Rect(3, Y,(Screen.width/4), 50),arrayHerramientas[y].herramienta2))
+	{	
+	colorOriginal();
+				base="";
+		md=""+arrayHerramientas[y].baseMD;
+		tvd=""+arrayHerramientas[y].baseTVD;
+		diametro="";
+		od=""+arrayHerramientas[y].od; 
+		id=""+arrayHerramientas[y].id;   
+		Camera.mainCamera.transform.position =Vector3(-100.0107,arrayHerramientas[y].ubicacion ,498.7601);
+		hand = arrayCompletacion[y];
+		//hand.GetComponentInChildren(Renderer).material.color=Color(0.777, 08, 0.604);
+		//hand.renderer.material.color = Color(0.777, 08, 0.604);	
+		
+		var arrrender : Component[];
+	arrrender = hand.GetComponentsInChildren (Renderer);
+	
+	var color : Color = Color(0.075, 0.412, 0.161, 0.784);
+	for (var joint : Renderer in arrrender) {	
+	joint.material.color=Color(0, 0, 1, 1); 
+	/*if(joint.material.color != Color(0, 0, 1, 1)){	
+		joint.material.color=Color(0, 0, 1, 1); 
+		}		 
+		else{
+		joint.material.color=color;
+		}*/
+	}
+	
+	/*for(var w=0; w<arrrender.Length ;w++)
+	{
+		if(arrrender[w].GetComponentInChildren(Renderer).material.color!=null)
+		{
+	
+	  if(arrrender[w].GetComponentInChildren(Renderer).material.color != color )
+	  {
+	     arrrender[w].GetComponentInChildren(Renderer).material.color== Color(0.777, 08, 0.604);
+	  }
+	  }
+	}*/
+		  
+ 	  x += Input.GetAxis("Mouse X") * xSpeed * distance* 0.02;
+      y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02;
+ 
+      y = ClampAngle(y, yMinLimit, yMaxLimit);
+ 
+     var rotation = Quaternion.Euler(y, x, 0);
+ 
+      distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel")*5, distanceMin, distanceMax); 
+ 
+      //var position = rotation * Vector3(0.0, 0.0, -distance) + target.position;
+ 
+      	Camera.mainCamera.transform.rotation = rotation;
+//transform.position = position;
+		
+	}
+	Y+=50;
+	}
+	 
+	}
+}
+}
+////////////////////////////FUNCION QUE ACTUALIZA LOS LABEL DE LOS BORTONES PARA LA COMPLETACION//////////////////////////////
+function Informacion (windowID : int) {
+
+	GUI.Label (Rect (10, 40, 100, 20), "Base: "+base);
+	GUI.Label (Rect (10, 80, 100, 20), "MD: "+md);
+	GUI.Label (Rect (10, 110, 100, 20), "TVD: "+tvd);
+	GUI.Label (Rect (150, 40, 100, 20), "Diametro: "+diametro);
+	GUI.Label (Rect (150, 80, 100, 20), "OD: "+od);
+	GUI.Label (Rect (150, 110, 100, 20),"ID: "+id);
+}
+///////////////////////////FUNCION QUE CONSTRUYE EL ARRAY DE OBJETOS A PARTIR DE UN JSON/////////////////////////////////////
+
+function datosEntrada(datos : String){
+var herramientas= new Array();
+ var herramienta;
+//var N = JSON.Parse('{"CASING":[{"numPieza":1,"revestimiento":"CASING","od":5454,"id":63583,"api":6565,"grado":56,"peso":5656,"tope":546,"baseMD":5465}],"HERRAMIENTAS":[{"numPieza":1,"herramienta":"CAMISA","od":545456,"id":6899,"longitud":5646,"baseMD":56546465},{"numPieza":1,"herramienta":"TUBING","od":6546,"id":654654,"longitud":6546546546,"baseMD":456546},{"numPieza":1,"herramienta":"XOVER31","od":6546456546,"id":546456546,"longitud":6456564,"baseMD":654654},{"numPieza":1,"herramienta":"PACKER","od":6546,"id":456456,"longitud":645456,"baseMD":6546456456},{"numPieza":1,"herramienta":"TUBING","od":556568,"id":565656,"longitud":15646,"baseMD":565987897},{"numPieza":1,"herramienta":"XOVER","od":546456,"id":654,"longitud":354,"baseMD":5468},{"numPieza":1,"herramienta":"PACKERRTV","od":8847,"id":6468,"longitud":8788,"baseMD":456456},{"numPieza":1,"herramienta":"TUBING","od":54456,"id":4568,"longitud":6546,"baseMD":45654}]}');
+var N = JSON.Parse(datos);
+numeroPiezas=int.Parse(N["CONFIGURACIONES" ]["numHerramientas"].Value);
+for(var y = 0; y < numeroPiezas; y++)
+{
+/*var var1=N["HERRAMIENTAS"][y]["herramienta"]["texto"].Value;
+var var2= float.Parse(N["HERRAMIENTAS"][y]["od"]["rate"].Value);
+var var3=float.Parse(N["HERRAMIENTAS"][y]["id2"]["rate"].Value);
+var var4=float.Parse(N["HERRAMIENTAS"][y]["baseMD"].Value);
+var var5=float.Parse(N["HERRAMIENTAS"][y]["baseTVD"].Value);*/ 
+ 
+//herramienta= new Herramienta( int.Parse(N["HERRAMIENTAS"][y]["numPieza"].Value),N["HERRAMIENTAS"][y]["herramienta"].Value, float.Parse(N["HERRAMIENTAS"][y]["od"].Value),float.Parse(N["HERRAMIENTAS"][y]["id"].Value),float.Parse(N["HERRAMIENTAS"][y]["longitud"].Value),float.Parse(N["HERRAMIENTAS"][y]["baseMD"].Value),0);
+herramienta= new Herramienta(y,N["HERRAMIENTAS"][y]["herramienta"]["aux1"].Value,N["HERRAMIENTAS"][y]["herramienta"]["texto"].Value, float.Parse(N["HERRAMIENTAS"][y]["od"]["rate"].Value), float.Parse(N["HERRAMIENTAS"][y]["id2"]["descripcion"].Value),float.Parse(N["HERRAMIENTAS"][y]["baseMD"].Value),float.Parse(N["HERRAMIENTAS"][y]["baseTVD"].Value),0); 
+
+herramientas.Push(herramienta);   
+
+}
+return herramientas;
+}
+
+////////////////////////////FUNCION QUE CONSTRUYE LA COMPLETACION //////////////////////////////////////////////////////////////
+function construitCompletacion(){
+
+arrayCompletacion= new ArrayList();
+//if(arrayHerramientas[0].herramienta!='TUBING')
+//{
+coordenaday=25003.7;
+//}
+for(var y = 0; y <arrayHerramientas.length; y++)
+{
+var objeto1:GameObject;
+
+
+switch (arrayHerramientas[y].herramienta)
+    {
+    case 'BARCARCHER':
+        objeto1=Instantiate(BARCARCHER, Vector3(coordenadax,(coordenaday-longBarCarcher),coordenadaZ), Quaternion.Euler(0, 0, 0));
+       arrayCompletacion.Add(objeto1.gameObject); 	
+        coordenaday=coordenaday-longBarCarcher;
+        arrayHerramientas[y].ubicacion=coordenaday;        
+        break;
+    case 'BELLNIPPLE':
+       objeto1=Instantiate(BELLNIPPLE, Vector3(coordenadax,(coordenaday-longBellNipple),coordenadaZ), Quaternion.Euler(0, 0, 0));
+          arrayCompletacion.Add(objeto1.gameObject);
+          coordenaday=coordenaday-longBellNipple;
+          arrayHerramientas[y].ubicacion=coordenaday;
+        break;    
+    case 'BULLPLUG':
+         objeto1=Instantiate(BULLPLUG, Vector3(coordenadax,(coordenaday-longBullPlug),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longBullPlug;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'CAMISA':
+         objeto1= Instantiate(CAMISA, Vector3(coordenadax,(coordenaday-longCamisa),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longCamisa;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'CARRIERTCP':
+         objeto1=Instantiate(CARRIERTCP, Vector3(coordenadax,(coordenaday-longCarrierTCP),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longCarrierTCP;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'CARRIERRTM':
+         objeto1=Instantiate(CARRIERRTM, Vector3(coordenadax,(coordenaday-longCarrierRTM),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longCarrierRTM;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'MAGNELTOOL':
+         objeto1=Instantiate(MAGNELTOOL, Vector3(coordenadax,(coordenaday-longMagnelTool),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longMagnelTool;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'MULESHOE':
+         objeto1=Instantiate(MULESHOE, Vector3(coordenadax,(coordenaday-longMuleShoe),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longMuleShoe;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'NOGO':
+         objeto1=Instantiate(NOGO, Vector3(coordenadax,(coordenaday-longNoGo),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longNoGo;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'ONOFFCONNECTOR':
+         objeto1=Instantiate(ONOFFCONNECTOR, Vector3(coordenadax,(coordenaday-longOnOfConnector),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longOnOfConnector;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'PACKER':
+         objeto1=Instantiate(PACKER, Vector3(coordenadax,(coordenaday-longPackerHidraulico),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longPackerHidraulico;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'PUPJOINT':
+         objeto1=Instantiate(PUPJOINT, Vector3(coordenadax,(coordenaday-longPupJoint),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longPupJoint;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'SAFETYJOINT':
+         objeto1=Instantiate(SAFETYJOINT, Vector3(coordenadax,(coordenaday-longSafetyJoint1),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        coordenaday=coordenaday-longSafetyJoint1;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'TUBING':
+         objeto1=Instantiate(TUBING, Vector3(coordenadax,(coordenaday-longTubing),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longTubing;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break; 
+    case 'WESTREST':
+         objeto1=Instantiate(WESTREST, Vector3(coordenadax,(coordenaday-longWestRest),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longWestRest;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'XOVER27':
+         objeto1=Instantiate(XOVER27, Vector3(coordenadax,(coordenaday-longXover27),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+      //  coordenaday=coordenaday-longXover27;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;
+    case 'XOVER31':
+         objeto1=Instantiate(XOVER31, Vector3(coordenadax,(coordenaday-longXover31),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longXover31;
+        arrayHerramientas[y].ubicacion=coordenaday;
+        break;        
+    default:
+         objeto1=Instantiate(TUBING, Vector3(coordenadax,(coordenaday-longTubing),coordenadaZ), Quaternion.Euler(0, 0, 0));
+        arrayCompletacion.Add(objeto1.gameObject);
+        coordenaday=coordenaday-longTubing;
+        break;
+    }
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function destruirCompletacion(){
+if(arrayCompletacion.Count!=0)
+{
+for(var i = 0; i < arrayCompletacion.Count; i++)
+{
+Destroy(arrayCompletacion[i]);
+}
+arrayHerramientas=[];
+coordenaday=25000;
+}
+
+}
+//////////////////////////////////////////////////////////////////FUNCION QUE GRAFICA UNA COMPLETACION////////////////////////
+function graficaCompletacion(data : String)
+{
+creaCasings(25000);
+if(arrayHerramientas.length !=0)
+{
+destruirCompletacion();
+}
+arrayHerramientas=datosEntrada(data);
+construitCompletacion();
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static function ClampAngle (angle : float, min : float, max : float) {
+    if (angle < -360)
+        angle += 360;
+    if (angle > 360)
+        angle -= 360;
+    return Mathf.Clamp (angle, min, max);
+}
+//////////////////////////////////////////////////////////////////////////////////////FUNCION QUE REGRESA LAS PIEZAS A SU COLOR ORIGINAL/////////////////////////////////////
+
+function colorOriginal(){
+for(var i = 0 ; i<arrayCompletacion.Count;i++)
+{
+hand = arrayCompletacion[i];
+		//hand.GetComponentInChildren(Renderer).material.color=Color(0.777, 08, 0.604);
+		//hand.renderer.material.color = Color(0.777, 08, 0.604);	
+		
+		var arrrender : Component[];
+	arrrender = hand.GetComponentsInChildren (Renderer);
+	
+	var color : Color = Color(0.075, 0.412, 0.161, 0.784);
+	for (var joint : Renderer in arrrender) {	
+		joint.material.color=color;
+		}	
+}
+}
+
